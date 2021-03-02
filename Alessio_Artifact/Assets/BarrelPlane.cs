@@ -1,44 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BarrelPlane : MonoBehaviour
 {
-    Quaternion rotation;
-    Quaternion rotationMin = Quaternion.Euler(new Vector3(0f, 0f, -50f));
-    Quaternion rotationMax = Quaternion.Euler(new Vector3(0f, 0f, 50f));
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        rotation = transform.rotation;
-    }
-
     // Update is called once per frame
     void Update()
     {
-
-        if (Input.GetKey(KeyCode.A) && rotation.z < rotationMax.z)
+        if (Input.GetKey(KeyCode.A))
         {
-            Debug.Log("triggered left");
-            rotation.z += Quaternion.Euler(new Vector3(0f, 0f, 10f * Time.deltaTime)).z;
+            Barrel(-60.0f);
         }
-
-        if (Input.GetKey(KeyCode.D) &&  rotation.z > rotationMin.z)
+        else if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("triggered right");
-            rotation.z -= Quaternion.Euler(new Vector3(0f, 0f, 10f * Time.deltaTime)).z;
+            Barrel(60.0f);
         }
-
-        transform.rotation = rotation;
+        else
+        {
+            Barrel(0.0f);
+        }
     }
-    private void Barrel(float direction)
+    private Vector3 Barrel(float direction)
     {
-        direction = (direction > 180) ? direction - 360 : direction;
-
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x,
-            transform.eulerAngles.y,
-            Mathf.Lerp(transform.eulerAngles.z, direction, Time.deltaTime * 1.0f));
+        return transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, Mathf.LerpAngle(transform.eulerAngles.z,direction, Time.deltaTime));
     }
 }
