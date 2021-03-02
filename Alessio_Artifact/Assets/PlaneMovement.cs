@@ -6,6 +6,8 @@ public class PlaneMovement : MonoBehaviour
 
     public GameObject planeObj;
 
+    public GameObject landingGear;
+
     public float currSpeed = 0.0f;
     public float baseSpeed = 10.0f;
     public float rotSpeedX = 3.0f;
@@ -13,9 +15,17 @@ public class PlaneMovement : MonoBehaviour
 
     private Vector3 gravity = Physics.gravity;
 
+    public bool isGrounded;
+
+    public bool isLandingGear;
+    
+    public enum EPlaneState { FLYING, DEPARTING, LANDING };
+
+    EPlaneState planeState;
     private void Start()
     {
         controller = GetComponent<CharacterController>();
+        planeState = EPlaneState.DEPARTING;
     }
 
     private void Update()
@@ -44,6 +54,35 @@ public class PlaneMovement : MonoBehaviour
 
         currSpeed = angleVelocityResult.currSpeed;
         baseSpeed = angleVelocityResult.baseSpeed;
+
+        isGrounded = GroundDetecor();
+
+        switch (planeState)
+        {
+            case EPlaneState.FLYING:
+                break;
+            case EPlaneState.DEPARTING:
+                break;
+            case EPlaneState.LANDING:
+                break;
+            default:
+                break;
+        }
+
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            if(isLandingGear)
+            {
+                landingGear.SetActive(true);
+                isLandingGear = false;
+            }
+            else if(!isLandingGear)
+            {
+                landingGear.SetActive(false);
+                isLandingGear = true;
+            }
+            
+        }
     }
 
     private Vector3 PropelPlane(float speed)
@@ -131,6 +170,18 @@ public class PlaneMovement : MonoBehaviour
                 currSpeed = currSpeed,
                 baseSpeed = baseSpeed
             };
+        }
+    }
+
+    private bool GroundDetecor()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, 5.0f))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
