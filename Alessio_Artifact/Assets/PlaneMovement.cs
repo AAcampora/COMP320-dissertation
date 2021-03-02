@@ -8,6 +8,8 @@ public class PlaneMovement : MonoBehaviour
 
     public GameObject landingGear;
 
+    public int rings = 10;
+
     public float currSpeed = 0.0f;
     public float baseSpeed = 10.0f;
     public float rotSpeedX = 3.0f;
@@ -15,17 +17,20 @@ public class PlaneMovement : MonoBehaviour
 
     private Vector3 gravity = Physics.gravity;
 
+    Vector3 propelPlane;
+
     public bool isGrounded;
 
-    public bool isLandingGear;
+    public bool isLandingGear = true;
     
     public enum EPlaneState { FLYING, DEPARTING, LANDING };
 
-    EPlaneState planeState;
+    public EPlaneState planeState;
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         planeState = EPlaneState.DEPARTING;
+        currSpeed = 0;
     }
 
     private void Update()
@@ -43,34 +48,46 @@ public class PlaneMovement : MonoBehaviour
             currSpeed = Mathf.Lerp(currSpeed, 0, Time.deltaTime * 0.5f);
         }
 
-
-        Vector3 propelPlane = PropelPlane(currSpeed);
-
-        propelPlane = StallingHandler(propelPlane);
-
-        controller.Move(propelPlane * Time.deltaTime);
-
-        var angleVelocityResult = PlaneAngleVelocity();
-
-        currSpeed = angleVelocityResult.currSpeed;
-        baseSpeed = angleVelocityResult.baseSpeed;
-
         isGrounded = GroundDetecor();
 
         switch (planeState)
         {
+             
             case EPlaneState.FLYING:
+                isLandingGear = false;
+                propelPlane = PropelPlane(currSpeed);
+                propelPlane = StallingHandler(propelPlane);
+
+                controller.Move(propelPlane * Time.deltaTime);
+
+                var angleVelocityResult = PlaneAngleVelocity();
+
+                currSpeed = angleVelocityResult.currSpeed;
+                baseSpeed = angleVelocityResult.baseSpeed;
                 break;
+
             case EPlaneState.DEPARTING:
+
+                isLandingGear = true;
+                if (Input.GetKey(KeyCode.Q))
+                {
+                    currSpeed = Mathf.Lerp(currSpeed, 10.0f, Time.deltaTime / 10.0f);
+                }
+                propelPlane = PropelPlane(currSpeed);
+                controller.Move(propelPlane * Time.deltaTime);
+
+                if (currSpeed >= 9.0f)
+                {
+                    planeState = EPlaneState.FLYING;
+                }
                 break;
+
             case EPlaneState.LANDING:
                 break;
             default:
                 break;
         }
 
-        if(Input.GetKeyDown(KeyCode.V))
-        {
             if(isLandingGear)
             {
                 landingGear.SetActive(true);
@@ -81,8 +98,6 @@ public class PlaneMovement : MonoBehaviour
                 landingGear.SetActive(false);
                 isLandingGear = true;
             }
-            
-        }
     }
 
     private Vector3 PropelPlane(float speed)
