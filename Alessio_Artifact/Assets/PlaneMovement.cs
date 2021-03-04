@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class PlaneMovement : MonoBehaviour
 {
     private CharacterController controller;
@@ -110,6 +110,22 @@ public class PlaneMovement : MonoBehaviour
         StallingHandler();
         GroundHelper();
         TurnHelper();
+
+        if(rings == 0)
+        {
+            if(SceneManager.GetActiveScene().name == "NoHelp")
+            {
+                SceneManager.LoadScene("withHelp");
+            }
+            else if (SceneManager.GetActiveScene().name == "withHelp")
+            {
+                SceneManager.LoadScene("NoHelp");
+            }
+            else
+            {
+                //nothing
+            }
+        }
     }
 
     private Vector3 PropelPlane(float speed)
