@@ -9,9 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/menu.unity
     guid: 09e4bcd2c991a3d4e83d6fa1d373a4db
   - enabled: 1
-    path: Assets/Scenes/NoHelp.unity
+    path: Assets/Scenes/noHelp.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/withHelp.unity
     guid: 68a06ba314364b54cbd275937afed3e4
+  - enabled: 1
+    path: Assets/Scenes/operation_FireFlight.unity
+    guid: 130675a86d2d91044bbf1fcb11768e80
+  - enabled: 1
+    path: Assets/Scenes/operation_Hidden_Storm.unity
+    guid: 73fa63d85829f014991470dd0270588b
   m_configObjects: {}
